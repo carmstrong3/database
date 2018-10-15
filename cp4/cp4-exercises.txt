@@ -1,0 +1,163 @@
+#### Exercises
+
+> List the commands for adding, updating, and deleting data.
+
+Adding: INSERT INTO
+
+Updating: UPDATE
+
+Deleting: DELETE
+
+> Explain the structure for each type of command.
+
+INSERT INTO must be following by the table name, the VALUES command followed by the corresponding values in the correct formatting for the table.
+
+UPDATE must be followed by the table name, the SET command followed by the value identified by a key/value pair of the column name, and the WHERE command with a corresponding key/value that exists in the table.
+
+DELETE must be followed by FROM with the table name and the WHERE command with a matching key/value that exists in the table.
+
+> What are some of the data types that can be used in tables? Give a real-world example of each type.
+
+`int` is the basic type for integers. If you are keeping inventory of products in a warehouse, you'll probably want to use `int` to represent the value you'll need.
+
+`text` is the basic type for stored messages. If you're keeping a log of posts on your social media site, `text` would be your best bet.
+
+`timestamp` is the basic type for a very specific time accounting of when something occured. You would want to log the time of a specific postor comment on your blog in your database as a timestamp.
+
+> Decide how to create a new table to hold a list of people invited to a wedding dinner. The table needs to have first and last names, whether they sent in their RSVP, the number of guests they are bringing, and the number of meals (1 for adults and 1/2 for children).
+
+```
+CREATE TABLE dinner (
+    first text,
+    last text,
+    rsvp bit,
+    guests int,
+    meals numeric(2, 1)     
+
+```
+
+> Which data type would you use to store each of the following pieces of information?
+
+First and last name: text
+Whether they sent in their RSVP: bit (0 for no and 1 for yes)
+Number of guests: int
+Number of meals, numeric(2,1)
+
+> Write a command that creates the table to track the wedding dinner.
+
+```
+CREATE TABLE dinner (
+    first text,
+    last text,
+    rsvp bit,
+    guests int,
+    meals numeric(2, 1)     
+)
+```
+
+> Write a command that adds a column to track whether the guest sent a thank you card.
+
+ALTER TABLE dinner ADD COLUMN card bit SET DEFAULT 0;
+ 
+> You have decided to move the data about the meals to another table, so write a command to remove the column storing the number meals from the wedding table.
+
+ALTER TABLE dinner DROP COLUMN meals;
+
+> The guests will need a place to sit at the reception, so write a command that adds a column for table number.
+
+ALTER TABLE dinner ADD COLUMN tablenum;
+
+> The wedding is over and we do not need to keep this information, so write a command that deletes the table numbers from the database.
+
+ALTER TABLE dinner DROP COLUMN tablenum;
+
+> Write a command to create a new table to hold the books in a library with the columns ISBN, title, author, genre, publishing date, number of copies, and available copies.
+
+```
+CREATE TABLE books (
+    isbn numeric(13, 0),
+    title text,
+    author text,
+    genre text,
+    pubdate int,
+    numcopies int,
+    availcopies int,
+)   
+
+> Find three books and add their information to the table.
+
+INSERT INTO books VALUES 
+    (9781784780999, 'Red Rosa', 'Kate Evans', 2015, 'Graphic Novel', 2, 2)
+    (9781904859253, 'No Gods No Masters', 'Daniel Guerin', 'Philosophy', 1998, 1, 1)
+    (9780486437873, 'Selected Writings and Speeches of Marcus Garvey', 'Marcus Garvey', 'Speeches', 2004, 2, 2)
+;
+ 
+> Someone has just checked out one of the books. Change the number of available copies to 1 fewer.
+
+UPDATE books SET availcopies=0 WHERE isbn=978904859253;
+
+> Now one of the books has been added to the banned books list. Remove it from the table.
+
+DELETE FROM books WHERE isbn = 9781784780999;
+
+> Write a command to make a new table to hold spacecrafts. Information should include id, name, year launched, country of origin, a brief description of the mission, orbiting body, if it is currently operating, and its approximate miles from Earth. In addition to the table creation, provide commands that perform the following operations:
+
+```
+CREATE TABLE spacecrafts (
+    id numeric(5),
+    name text,
+    year int,
+    country char(3),
+    description text,
+    orbiting text,
+    iscurrent bin,
+    miles int
+)
+```
+> Add three non-Earth-orbiting satellites to the table.
+
+INSERT INTO spacecrafts VALUES 
+    (25008, 'Cassini', 1997, USA, 'Probe sent to Saturn', 'Saturn', 0, 4900000000)
+    (37936, 'Curiosity', 2011, USA, 'Rover sent to Mars', 'Mars', 1, 560000)
+    (27849, 'Opportunity', 2004, USA, 'Rover sent to Mars', 'Mars', 1, 560000)
+;
+
+> Remove one of the satellites from the table since it has just crashed into the planet.
+
+DELETE FROM spacecrafts WHERE id=25008;
+
+> Edit another satellite because it is no longer operating and change the value to reflect that.
+
+UPDATE spacecrafts SET iscurrent=0 WHERE id=37936;
+
+> Write a command to create a new table to hold the emails in your inbox. This table should include an id, the subject line, the sender, any additional recipients, the body of the email, the timestamp, whether or not you have read the email, and the id of the email chain it's in. Also provide commands that perform the following operations:
+
+```
+CREATE TABLE inbox (
+    id int,
+    subject text,
+    sender VARCHAR(320),
+    copies VARCHAR(320),
+    body text,
+    timestamp DATETIME NOT NULL DEFAULT(GETDATE()),
+    isread bit,
+    chainid int
+);
+```
+ 
+> Add three new emails to the inbox.
+
+INSERT INTO inbox VALUES
+    (123456789, 'Receipt', 'payments@bloc.io', 'none', 'This is a confirmation that you payed $1,250.00 for the month of October.', GETDATE(), 0, 12345)
+    (987654321, 'Receipt from Uber', 'payments@uber.com', 'none', 'Thisis a confirmation of your $12.00 ride.', GETDATE(), 0, 12345)
+    (543219876, 'Definitely not spam', 'sales@wesellsandinarizona.com', 'none', 'Are you interested in some sand?', GETDATE(), 0, 32415)
+;
+ 
+> You deleted one of the emails, so write a command to remove the row from the inbox table.
+
+DELETE FROM inbox WHERE id=54329876;
+
+> You started reading an email but just heard a crash in another room. Mark the email as unread before investigating the crash, so you can come back and read it later.
+
+UPDATE inbox SET isread=0 WHERE id=987654321;
+
