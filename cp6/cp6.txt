@@ -1,0 +1,95 @@
+#### Exercises
+
+> How do you find related data held in two separate data tables?
+
+You join them on a shared key.
+  
+> Explain, in your own words, the difference between an INNER JOIN, LEFT OUTER JOIN, and RIGHT OUTER JOIN. Give a real-world example for each.
+
+INNER JOIN: My fiance and I decide to only invite people to our wedding who are on both of our independently made lists.
+LEFT OUTER JOIN: My fiance and I decide to invite all people on my list and people from her list that match my list to our wedding. 
+RIGHT OUTER JOIN: My fiance and I decide to invite all people on her list and people from her list that I also have on my list to our wedding.
+ 
+> Define primary key and foreign key. Give a real-world example for each.
+ 
+A primary key is inherent to each row in a table. It is like the running tally of lines as you write something. Each new line is its own thing.
+
+A foreign key is a reference in a table to another table's primary key or defining data that can be used as a key.
+
+> Define aliasing.
+
+Aliasing is simply giving a nickname to a dataset. It is useful because you can reduce the name to something more simple like "clifford" to "c" or "cliff". It can also be used to rename columns when you run a query to make it more user-friendly, like changing "three_point_percentage" to "3pt%".
+ 
+> Change this query so that you are using aliasing:
+  SELECT p.name, c.salary,
+  c.vacation_days FROM professor AS p JOIN
+  compensation AS c ON p.id =
+  c.professor_id;
+
+> Why would you use a NATURAL JOIN? Give a real-world example.
+ 
+You would use a NATURAL JOIN when you already know the contents of two tables and know that using that query schema will result in the information you want. It would be dangerous to use as a final product without knowing what you're leaving out. A good example would be a NATURAL JOIN of basketball stats for basketball player against different teams in the same year.
+ 
+> Using this Employee schema and data, write queries to find the following information:
+  List all employees and all shifts.
+  
+SELECT e.name, shifts.date, shifts.start_time AS start, shifts.end_time AS end
+FROM employees as e 
+JOIN scheduled_shifts as ss ON e.id = ss.employee_id
+JOIN shifts ON ss.shift_id = shifts.id;
+
+> Using this Adoption schema and data, please write queries to retrieve the following information and include the results: Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
+ 
+SELECT v.first_name AS first, v.last_name AS last, dogs.name
+FROM volunteers AS v
+LEFT OUTER JOIN dogs ON v.foster_dog_id = dogs.id; 
+
+> The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the "Happy Tail" social media promotion which posts recent successful adoptions.
+
+SELECT cats.name AS cat_name, ad.first_name AS first, ad.last_name AS last, key.date
+FROM cats
+JOIN cat_adoptions AS key ON cats.id = key.cat_id
+JOIN adopters AS ad ON key.adopter_id = ad.id
+WHERE key.date <= CURRENT_DATE - INTERVAL '30 DAYS';
+
+> Create a list of adopters who have not yet chosen a dog to adopt.
+ 
+SELECT ad.first_name as first, ad.last_name as last, ad.address, ad.phone_number as phone
+FROM adopters AS ad
+LEFT JOIN dog_adoptions as key ON ad.id = key.adopter_id
+WHERE key.date IS NULL
+
+> Lists of all cats and all dogs who have not been adopted.
+
+SELECT dogs.name
+FROM dogs
+LEFT JOIN dog_adoptions as key on dogs.id = key.dog_id
+
+  
+> The name of the person who adopted Rosco.
+
+SELECT ad.first_name as first, ad.last_name as last
+FROM adopters as ad
+JOIN dog_adoptions as key on ad.id = key.adopter_id
+JOIN dogs on key.dog_id = dogs.id
+WHERE dogsname = 'Rosco';
+
+> Using this Library schema and data, write queries applying the following scenarios and include the results: 
+
+> To determine if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+SELECT p.name, h.rank as position
+FROM patrons as p
+JOIN holds as h on p.id = h.patron_id
+JOIN books as b on h.isbn = b.isbn
+WHERE b.title = 'Advanced Potion-Making'
+ORDER BY h.rank;
+
+> List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
+
+SELECT p.*, b.title
+FROM patrons as p
+JOIN transactions as t on p.id = t.patron_id
+JOIN books as b on t.isbn = b.isbn;
+
+
